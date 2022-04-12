@@ -57,8 +57,9 @@ async function searchForCity(cityName){
     var response = await fetch(getOneCallURL(detail.coord))
     var data = await response.json()
     clearInfo()
+    console.log(data)
     displayCurrentData(detail.name, data.current)
-    display5DayData(data)
+    display5DayData(data.daily)
 }
 
 async function getCityDetail(cityName){
@@ -78,17 +79,27 @@ function getOneCallURL(coord){
     return url
 }
 
+function convertUnixToString(date){
+    var options = {day: 'numeric', month: 'numeric', year: 'numeric'}
+    var res = new Intl.DateTimeFormat('en-AU', options).format(date)
+    return res
+}
+
+function getIconLink(id){
+    var iconLink = "http://openweathermap.org/img/wn/" + id + ".png"
+    return iconLink
+}
+
 // display api data
 function displayCurrentData(cityName, data){
-    console.log(cityName)
-    console.log(data)
     var currentDataArea = $('<div>').addClass('border border-success border-1 bg-info p-2 mb-3')
+
+    // convert unix date from api to readable date
     var date = new Date(data.dt*1000)
-    var options = {day: 'numeric', month: 'numeric', year: 'numeric'};
-    var header = $('<h2>').text(cityName + " ("+ new Intl.DateTimeFormat('en-AU', options).format(date) +")")
     
-    
-    var iconLink = "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png"
+    var header = $('<h2>').text(cityName + " ("+ convertUnixToString(date) +")")
+    // adding weather icon
+    var iconLink = getIconLink(data.weather[0].icon)
     var icon = $('<img>').attr('src', iconLink)
     console.log(iconLink)
     header.append(icon)
@@ -119,7 +130,24 @@ function displayCurrentData(cityName, data){
 }
 
 function display5DayData(data){
-
+    
+    var header = $('<h2>').text('5-Day Forecast:')
+    infoArea.append(header)
+    for (var i=1; i < 6; i++){
+        var fiveDayArea = $('<div>').addClass('card mx-2 mb-2 col-sm-12 col-lg-5 col-xl-2 flex-fill bg-secondary')
+        var cardBody = $('<div>').addClass('card-body text-white text-center')
+        fiveDayArea.append(cardBody)
+        var date = new Date(data[i].dt*1000)
+        var dateText = $('<h5>').text(convertUnixToString(date))
+        var icon = $('<img>').attr('src', getIconLink(data[i].weather[0].icon))
+        var temp = $('<p>').text('Temp: ' + data[i].temp.day + "°C")
+        var wind = $('<p>').text('Wind: ' + data[i].wind_speed + " MPH")
+        var humid = $('<p>').text('Humidity: ' + data[i].humidity + "%")
+        cardBody.append(dateText, icon, temp, wind, humid)
+        fiveDayArea.append(cardBody)
+        infoArea.append(fiveDayArea)
+    }
+    
 }
 
 function clearInfo(){
