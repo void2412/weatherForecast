@@ -53,21 +53,23 @@ function clearSearchHistory(){
 
 // api call related
 async function searchForCity(cityName){
-    var coord = await getCityCoord(cityName)
-    var data = await fetch(getOneCallURL(coord)).json()
-    displayCurrentData(data)
+    var detail = await getCityDetail(cityName)
+    var response = await fetch(getOneCallURL(detail.coord))
+    var data = await response.json()
+    clearInfo()
+    displayCurrentData(detail.name, data.current)
     display5DayData(data)
 }
 
-async function getCityCoord(cityName){
-    var response = await fetch(getGeocodeURL(cityName))
+async function getCityDetail(cityName){
+    var response = await fetch(getCityDetailURL(cityName))
     var data = await response.json()
-    var coord = {lat:data[0].lat,lon:data[0].lon}
-    return coord
+    var detail = {name: data.name, coord: data.coord}
+    return detail
 }
 
-function getGeocodeURL(cityName){
-    var url = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=" + apiKey + "&limit=1"
+function getCityDetailURL(cityName){
+    var url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey
     return url
 }
 
@@ -77,8 +79,43 @@ function getOneCallURL(coord){
 }
 
 // display api data
-function displayCurrentData(data){
-
+function displayCurrentData(cityName, data){
+    console.log(cityName)
+    console.log(data)
+    var currentDataArea = $('<div>').addClass('border border-success border-1 bg-info p-2 mb-3')
+    var date = new Date(data.dt*1000)
+    var options = {day: 'numeric', month: 'numeric', year: 'numeric'};
+    var header = $('<h2>').text(cityName + " ("+ new Intl.DateTimeFormat('en-AU', options).format(date) +")")
+    
+    
+    var iconLink = "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png"
+    var icon = $('<img>').attr('src', iconLink)
+    console.log(iconLink)
+    header.append(icon)
+    var temp = $('<p>').text("Temp: " + data.temp + "°C")
+    var wind = $('<p>').text("Wind: " + data.wind_speed + " MPH")
+    var humid = $('<p>').text("Humidity: " + data.humidity + "%")
+    var UV = $('<p>').text('UV Index: ')
+    var UVspan = $('<span>').addClass('text-white p-2').attr('style','display: inline-block;').text(data.uvi)
+    // check UV data and display appopriate color code
+    if (data.uvi <= 2){
+        UVspan.attr('style','background-color: green;')
+    }
+    else if(2<data.uvi<=5){
+        UVspan.attr('style','background-color: yellow;')
+    }
+    else if(5<data.uvi<=7){
+        UVspan.attr('style','background-color: orange;')
+    }
+    else if(7<data.uvi<=10){
+        UVspan.attr('style','background-color: red;')
+    }
+    else if(data.uvi>10){
+        UVspan.attr('style','background-color: violet;')
+    }
+    UV.append(UVspan)
+    currentDataArea.append(header,temp,wind,humid,UV)
+    infoArea.append(currentDataArea)
 }
 
 function display5DayData(data){
