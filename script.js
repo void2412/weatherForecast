@@ -22,7 +22,9 @@ function searchBtnClicked(event){
 
 // search History related
 function handleSearchHistory(event) {
-
+    var target = $(event.target)
+    var cityName = target.text()
+    searchForCity(cityName)
 }
 
 function updateSearchHistory(cityName){
@@ -41,7 +43,7 @@ function updateSearchHistory(cityName){
 function displaySearchHistory(){
     searchHistoryList = JSON.parse(localStorage.getItem('searchHistory'))||[]
     for (let index = 0; index < searchHistoryList.length; index++) {
-        var btnElement = $('<button>').addClass('btn btn-secondary form-control mb-3').text(searchHistoryList[index])
+        var btnElement = $('<button>').addClass('btn btn-secondary historyBtn form-control mb-3').text(searchHistoryList[index])
         searchHistoryArea.append(btnElement)
     }
 }
