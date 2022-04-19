@@ -1,3 +1,4 @@
+// initial global variables
 var searchBtn = $('#searchBtn')
 var cityNameInput = $('#cityNameInput')
 var searchHistoryArea = $('#searchHistoryArea')
@@ -5,12 +6,15 @@ var infoArea = $('#infoArea')
 var searchHistoryList = JSON.parse(localStorage.getItem('searchHistory'))||[]
 const maxSearchHistorySize = 10
 var apiKey = "cc09dda6a0046068b344f5f5d0903567"
-var test
+
+
+// init function, get called once on startup
 function init(){
     displaySearchHistory()
 }
 init()
 
+// handle search button
 function searchBtnClicked(event){
     event.preventDefault()
     var cityName = cityNameInput.val().trim()
@@ -20,13 +24,14 @@ function searchBtnClicked(event){
     displaySearchHistory()
 }
 
-// search History related
+// handle search History buttons
 function handleSearchHistory(event) {
     var target = $(event.target)
     var cityName = target.text()
     searchForCity(cityName)
 }
 
+// update changed search History to localStorage
 function updateSearchHistory(cityName){
     if (cityName == ''){
         return
@@ -40,6 +45,7 @@ function updateSearchHistory(cityName){
     }
 }
 
+// pull data from localStorage and display search History buttons
 function displaySearchHistory(){
     searchHistoryList = JSON.parse(localStorage.getItem('searchHistory'))||[]
     for (let index = 0; index < searchHistoryList.length; index++) {
@@ -48,6 +54,7 @@ function displaySearchHistory(){
     }
 }
 
+// clear the search history area to populate new one
 function clearSearchHistory(){
     searchHistoryArea.children().remove()
 }
@@ -64,6 +71,7 @@ async function searchForCity(cityName){
     display5DayData(data.daily)
 }
 
+// get name of the city and its coordinate to use with onecall api
 async function getCityDetail(cityName){
     var response = await fetch(getCityDetailURL(cityName))
     var data = await response.json()
@@ -71,28 +79,33 @@ async function getCityDetail(cityName){
     return detail
 }
 
+
+// get URL for the getCityDetail function
 function getCityDetailURL(cityName){
     var url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey
     return url
 }
 
+// get URL for oneCall API function
 function getOneCallURL(coord){
     var url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + coord.lat + "&lon=" + coord.lon + "&appid=" + apiKey + "&units=metric"
     return url
 }
 
+// convert UNIX time from api response to Readable time and date
 function convertUnixToString(date){
     var options = {day: 'numeric', month: 'numeric', year: 'numeric'}
     var res = new Intl.DateTimeFormat('en-AU', options).format(date)
     return res
 }
 
+// get URL for the icon of the weather from api
 function getIconLink(id){
     var iconLink = "http://openweathermap.org/img/wn/" + id + ".png"
     return iconLink
 }
 
-// display api data
+// display current weather info
 function displayCurrentData(cityName, data){
     var currentDataArea = $('<div>').addClass('border border-success border-1 bg-info p-2 mb-3')
 
@@ -131,8 +144,8 @@ function displayCurrentData(cityName, data){
     infoArea.append(currentDataArea)
 }
 
+// display 5 day forecast info in 5 cards 
 function display5DayData(data){
-    
     var header = $('<h2>').text('5-Day Forecast:')
     infoArea.append(header)
     for (var i=1; i < 6; i++){
@@ -152,9 +165,11 @@ function display5DayData(data){
     
 }
 
+// clear the infoArea to populate new info
 function clearInfo(){
     infoArea.children().remove()
 }
 
+// add eventListener to appopriate button and area
 searchBtn.on('click', searchBtnClicked)
 searchHistoryArea.on('click', '.historyBtn', handleSearchHistory)
