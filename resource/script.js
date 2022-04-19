@@ -82,7 +82,7 @@ async function getCityDetail(cityName){
 
 // get URL for the getCityDetail function
 function getCityDetailURL(cityName){
-    var url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey
+    var url = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey
     return url
 }
 
@@ -101,7 +101,7 @@ function convertUnixToString(date){
 
 // get URL for the icon of the weather from api
 function getIconLink(id){
-    var iconLink = "http://openweathermap.org/img/wn/" + id + ".png"
+    var iconLink = "https://openweathermap.org/img/wn/" + id + ".png"
     return iconLink
 }
 
