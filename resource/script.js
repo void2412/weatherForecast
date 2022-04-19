@@ -122,7 +122,7 @@ function displayCurrentData(cityName, data){
     var wind = $('<p>').text("Wind: " + data.wind_speed + " m/s")
     var humid = $('<p>').text("Humidity: " + data.humidity + "%")
     var UV = $('<p>').text('UV Index: ')
-    var UVspan = $('<span>').addClass('text-white p-2').attr('style','display: inline-block;').text(data.uvi)
+    var UVspan = $('<span>').addClass('text-dark p-2').attr('style','display: inline-block;').text(data.uvi)
     // check UV data and display appopriate color code
     if (data.uvi <= 2){
         UVspan.attr('style','background-color: green;')
