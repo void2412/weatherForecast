@@ -26,8 +26,8 @@ Chi Hieu Nguyen
 2. When you search a city, that city will be saved to local storage and display as a button for quick access, search History stores up to 10 city.
 3. When you click a button in search History, data will show that city.
 4. When showing data for UV of a city, it will be:
-    green: UV <= 2
-    yellow: 3 <= UV <= 5
-    orange: 6 <= UV <= 7
-    red: 8 <= UV <= 10
-    violet: UV >= 11+
+    - green: UV <= 2
+    - yellow: 3 <= UV <= 5
+    - orange: 6 <= UV <= 7
+    - red: 8 <= UV <= 10
+    - violet: UV >= 11+
