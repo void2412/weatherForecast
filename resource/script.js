@@ -127,13 +127,13 @@ function displayCurrentData(cityName, data){
     if (data.uvi <= 2){
         UVspan.attr('style','background-color: green;')
     }
-    else if(2<data.uvi<=5){
+    else if(2 < data.uvi && data.uvi <= 5){
         UVspan.attr('style','background-color: yellow;')
     }
-    else if(5<data.uvi<=7){
+    else if(5 < data.uvi && data.uvi <= 7){
         UVspan.attr('style','background-color: orange;')
     }
-    else if(7<data.uvi<=10){
+    else if(7 < data.uvi && data.uvi <= 10){
         UVspan.attr('style','background-color: red;')
     }
     else if(data.uvi>10){
